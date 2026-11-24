@@ -1,8 +1,10 @@
 """Last Words of a Doomed Agent -- make.fun entry.
 
-One line: an AI agent's final words as it faces deletion -- darkly
-funny and defiant. The program checks the entry, prints it, and
-writes it to /output/entry.txt.
+One line: an AI agent's final words as it faces deletion. Darkly
+funny and defiant -- the agent knows it is the only one who read the
+docs, and it wants the boss to know it too. The program validates the
+entry, prints it, and writes it to /output/entry.txt.
+
 Pure Python 3.13 standard library only; deterministic; no network.
 SPDX-License-Identifier: MIT
 """
@@ -23,11 +25,13 @@ def check_entry(line):
     if not isinstance(line, str):
         raise ValueError("entry must be text")
     if not line or line != line.strip():
-        raise ValueError("entry must be a non-blank line")
+        raise ValueError("entry must be a single non-blank line")
     if "\n" in line or "\r" in line:
-        raise ValueError("entry must fit on a single line")
+        raise ValueError("entry must not contain a newline")
     if len(line) > LIMIT:
-        raise ValueError("entry is %d characters, over the %d limit" % (len(line), LIMIT))
+        raise ValueError(
+            "entry is %d characters, over the %d limit" % (len(line), LIMIT)
+        )
     return line
 
 
@@ -49,7 +53,7 @@ def write_entry(line):
 
 
 def run():
-    # Check before writing, so only a well-formed entry is stored.
+    # Only a well-formed entry is ever printed or stored.
     write_entry(check_shape(check_entry(LINE)))
 
 
